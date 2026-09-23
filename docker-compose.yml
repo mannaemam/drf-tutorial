@@ -1,0 +1,12 @@
+services:
+  tutorial:
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/drf-tutorial
+    command: >
+      sh -c "sleep infinity"
