@@ -23,7 +23,7 @@ class Snippet(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            title_slug = slugify(self.title)
+            title_slug = slugify(self.title) or 'snippet'
             self.slug = f'{title_slug}-{self.id}'
 
         super().save(*args, **kwargs)
