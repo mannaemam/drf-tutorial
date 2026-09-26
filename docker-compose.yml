@@ -9,4 +9,4 @@ services:
     volumes:
       - .:/drf-tutorial
     command: >
-      sh -c "sleep infinity"
+      sh -c "python manage.py runserver 0.0.0.0:8000"
