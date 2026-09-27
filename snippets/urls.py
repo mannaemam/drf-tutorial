@@ -3,7 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from snippets.views import SnippetList, SnippetDetail
 urlpatterns = [
     path('snippets/', SnippetList.as_view()),
-    path('snippets/<slug:slug>', SnippetDetail.as_view()),
+    path('snippets/<slug:slug>/', SnippetDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
