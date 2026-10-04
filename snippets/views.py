@@ -1,21 +1,21 @@
-import snippets
-from snippets.models import Snippet
-from snippets.permissions import IsOwnerOrReadOnly
-from snippets.serializers import SnippetSerializer, UserSerializer
-from rest_framework import generics, response
-from django.contrib.auth.models import User
-from rest_framework import permissions
+from rest_framework import generics
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework import permissions
+from rest_framework import viewsets
 from rest_framework import renderers
+from rest_framework.response import Response
 
-class SnippetList(generics.ListCreateAPIView):
+from snippets.models import Snippet
+from snippets.serializers import SnippetSerializer, UserSerializer
+from snippets.permissions import IsOwnerOrReadOnly
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    List all code snippets, or create a new snippet.
+    This viewset automatically provides `list` and `retrieve` actions.
     """
     queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
+    serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = 'slug'
 
@@ -32,16 +32,6 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SnippetSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     lookup_field = "slug"
-
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    lookup_field = 'slug'
 
 @api_view(['GET'])
 def api_root(request, format=None):
