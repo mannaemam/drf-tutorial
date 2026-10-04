@@ -1,20 +1,47 @@
+import html
+
+from django.contrib.admin.utils import lookup_field
 from rest_framework import serializers, generics
 from snippets.models import Snippet
 from django.contrib.auth.models import User
 
-class SnippetSerializer(serializers.ModelSerializer):
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    slug = serializers.ReadOnlyField()
+    highlight = serializers.HyperlinkedIdentityField(
+        view_name='snippet-highlight',
+        lookup_field='slug',
+        format='html',
+    )
+
     class Meta:
         model = Snippet
-        fields = ['id', 'title', 'slug', 'code', 'linenos', 'language', 'style', 'owner']
+        fields = [
+            'url',
+            'id',
+            'highlight',
+            'owner',
+            'title',
+            'code',
+            'linenos',
+            'language',
+            'style',
+            'slug'
+        ]
+        extra_kwargs = {
+            'url': {
+                'lookup_field': 'slug',
+            }
+        }
 
 
-class UserSerializer(serializers.ModelSerializer):
-    snippets = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Snippet.objects.all()
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    snippets = serializers.HyperlinkedRelatedField(
+        many=True,
+        view_name='snippet-detail',
+        read_only=True,
+        lookup_field='slug'
     )
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'snippets']
+        fields = ['url', 'id', 'username', 'snippets']
