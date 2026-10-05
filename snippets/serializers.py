@@ -1,6 +1,3 @@
-import html
-
-from django.contrib.admin.utils import lookup_field
 from rest_framework import serializers, generics
 from snippets.models import Snippet
 from django.contrib.auth.models import User
